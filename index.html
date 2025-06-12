@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Father's Day</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    #container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
+    }
+    #slide {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    #message {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      text-align: center;
+      font-size: 2em;
+      color: #fff;
+      text-shadow: 2px 2px 4px #000;
+      z-index: 5;
+    }
+    #startBtn {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      background: #ff69b4;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+/*
+btn {
+      position: absolute;
+      top: 90%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      background: #ff69b4;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 10;
+*/
+  </style>
+</head>
+<body>
+<div id="blockOverlay"></div>
+
+<style>
+#blockOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0);
+  z-index: 9999;
+  pointer-events: none;
+}
+</style>
+
+  <div id="container">
+    <img id="slide" src="images/main.jpg" alt="Father's Day Photo">
+   
+<button id="startBtn"> 
+     
+     Click here 🌸</button>
+ 
+    <canvas id="flowers"></canvas>
+  </div>
+  <audio id="bgmusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    const images = [
+      "images/photo1.jpg",
+      "images/photo2.jpg",
+      "images/photo3.jpg",
+      "images/photo4.jpg",
+      "images/photo5.jpg",
+      "images/photo6.jpg",
+      "images/photo7.jpg",
+      "images/photo8.jpg",
+      "images/photo9.jpg",
+      "images/photo10.jpg"
+    ];
+
+    let current = 0;
+    const slide = document.getElementById('slide');
+    const bgmusic = document.getElementById("bgmusic");
+    const startBtn = document.getElementById("startBtn");
+
+    function showNextImage() {
+      slide.src = images[current];
+      current = (current + 1) % images.length;
+    }
+
+    startBtn.addEventListener("click", () => {
+      bgmusic.play();
+      startBtn.style.display = "none";
+      setInterval(showNextImage, 4000);
+      showNextImage();
+    });
+
+    // Flower petal animation
+    const canvas = document.getElementById('flowers');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let petals = [];
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    function createPetal() {
+      return {
+        x: Math.random() * width,
+        y: -20,
+        size: 10 + Math.random() * 15,
+        speed: 1 + Math.random() * 2,
+        angle: Math.random() * Math.PI * 2,
+        rotationSpeed: 0.01 + Math.random() * 0.03
+      };
+    }
+
+    function drawPetal(p) {
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle);
+      ctx.fillStyle = "rgba(255,182,193,0.75)";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      if (Math.random() < 0.1) petals.push(createPetal());
+      petals.forEach(p => {
+        p.y += p.speed;
+        p.angle += p.rotationSpeed;
+        drawPetal(p);
+      });
+      petals = petals.filter(p => p.y < height + 20);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+
+      <script>
+      // Block Ctrl+P
+      document.addEventListener("keydown", function(event) {
+      if (event.ctrlKey && event.key === "p") {
+      event.preventDefault();
+      alert("Printing or PDF conversion is disabled.");
+      }
+      });
+      
+      // Block print dialog (limited effect on mobile)
+      window.onbeforeprint = function() {
+      alert("Printing or PDF conversion is not allowed.");
+      return false;
+      };
+      
+      // Disable right-click
+      document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+      alert("Right-click is disabled.");
+      });
+      
+      // Disable text selection
+      document.addEventListener("selectstart", function(e) {
+      e.preventDefault();
+      });
+      
+      // Show content section only when user interacts
+      function revealSection(sectionId) {
+      document.getElementById(sectionId).classList.add("visible");
+      }
+      
+      // Detect potential screenshot attempts (very limited)
+      window.addEventListener("keydown", function(event) {
+      // Detect common screenshot shortcuts (e.g., PrintScreen, Alt+PrintScreen)
+      if (event.key === "PrintScreen" || (event.altKey && event.key === "PrintScreen")) {
+      alert("Screenshots are not allowed.");
+      // Attempt to obscure content
+      document.body.style.display = "none";
+      setTimeout(() => { document.body.style.display = ""; }, 100);
+      }
+      });
+      
+      // Remove overlay when clicked
+      function removeOverlay() {
+      const overlay = document.getElementById("overlay");
+      overlay.style.display = "none";
+      revealSection("section1"); // Show first section
+      }
+      
+      document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    document.body.style.filter = 'blur(20px)';
+  } else {
+    document.body.style.filter = 'none';
+  }
+});
+      
+
+
+</script>
+</body>
+</html>
+
